@@ -36,12 +36,12 @@ def notes():
         tags = tags.split()
         note = models.Note.create(note=note, tags=tags, id=id)
         models.Session.commit()
-        return note.to_dict(), 201
+        return render(note.to_dict()), 201
 
 
 @app.route('/tags', methods=['GET'])
 def tags():
-    return render(models.Tag.index())
+    return render(models.Tag.index()), 200
 
 
 @app.route('/tags/<tag>/notes', methods=['GET'])
