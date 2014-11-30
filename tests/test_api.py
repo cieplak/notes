@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 import json
 
 from notes.api import app
-from notes.models import Session, db_init
+from notes.models import db_init
 
 
 def test_create_note():
@@ -13,7 +13,9 @@ def test_create_note():
         note='note to self',
         tags='reminder todo',
     )
-    client.post('/notes', data=json.dumps(body))
+    client.post(
+        '/notes', content_type='application/json', data=json.dumps(body)
+    )
     notes = json.loads(client.get('/notes').data)
     expected_notes = [
         dict(
@@ -48,7 +50,9 @@ def test_notes_by_tags():
     )
     notes = [note1, note2, note3]
     for note in notes:
-        client.post('/notes', data=json.dumps(note))
+        client.post(
+            '/notes', content_type='application/json', data=json.dumps(note)
+        )
     expected_view = {
         'car': [
             {'note': 'buy oil; change oil', 'tags': ['car', 'grocery']}
@@ -70,6 +74,7 @@ def test_notes_by_tags():
                 note.pop(attr)
     assert view == expected_view
 
+
 def test_note_under_tag():
     db_init()
     client = app.test_client()
@@ -77,7 +82,9 @@ def test_note_under_tag():
         note='buy oil; change oil',
         tags='car grocery',
     )
-    client.post('/notes', data=json.dumps(note))
+    client.post(
+        '/notes', content_type='application/json', data=json.dumps(note)
+    )
     resp = client.get('/tags/car/notes')
     view = json.loads(resp.data)
     expected_view = [
