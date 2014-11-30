@@ -22,6 +22,10 @@ def root():
 "notes_under_tag": "/notes_under_tag"
 }'''
 
+@app.route('/index.html')
+def root():
+    return app.send_static_file('index.html')
+
 
 @app.route('/notes', methods=['GET', 'POST'])
 def notes():
@@ -37,6 +41,11 @@ def notes():
         note = models.Note.create(note=note, tags=tags, id=id)
         models.Session.commit()
         return render(note.to_dict()), 201
+
+
+@app.route('/notes/<id>')
+def note(id):
+    return render(models.Note.query.get(id).to_dict())
 
 
 @app.route('/tags', methods=['GET'])

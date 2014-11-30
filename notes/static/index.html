@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Experimentation</title>
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js' type='text/javascript'></script>
+    <script>
+        function post(url, data, cb) {
+            $.ajax({
+                url:url,
+                type:"POST",
+                data:JSON.stringify(data),
+                contentType:"application/json; charset=utf-8",
+                dataType:"json",
+                success: cb
+            });
+        }
+
+        function get(url, cb) {
+            $.ajax({
+                url:url,
+                type:"GET",
+                contentType:"application/json; charset=utf-8",
+                dataType:"json",
+                success: cb
+            });
+        }
+
+        function render(obj) {
+            notes_by_tag = document.getElementById('notes_by_tag');
+            for(var tag in obj) {
+                notes_by_tag.innerHTML += '<div class="tag">' + tag + '</div>';
+                for(var i in obj[tag]) {
+                    notes_by_tag.innerHTML += '<div class="note"><a href="/notes/' + obj[tag][i]["id"] + '">' + obj[tag][i]["note"] + '</div>';
+                }
+            }
+        }
+    </script>
+    <style type="text/css">
+        .tag {
+            font-weight: bold;
+        }
+        .note {
+            margin-left: 100px;
+        }
+        .box {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body onload="get('/notes_by_tags', render)">
+<div class="box">
+    <form target="" action="/notes" method="POST">
+        <div>tags: <input type="text" name="tags"></div>
+        <div>note: <input type="text" name="note"></div>
+        <div><input type="submit" value="upload"></div>
+    </form>
+</div>
+<div class="box" id="notes_by_tag"></div>
+</body>
+</html>
