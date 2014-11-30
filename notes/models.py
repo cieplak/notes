@@ -23,8 +23,8 @@ def db_init():
 
 note_tag_associations = Table(
     'note_tag_associations', Base.metadata,
-    Column('tag', Unicode, ForeignKey('tags.tag')),
-    Column('note_id', Unicode, ForeignKey('notes.id')),
+    Column('tag', Unicode, ForeignKey('tags.tag'), index=True),
+    Column('note_id', Unicode, ForeignKey('notes.id'), index=True),
 )
 
 
@@ -46,6 +46,20 @@ class Note(Base):
     @classmethod
     def index(cls):
         return Note.query.all()
+
+    @classmethod
+    def index_by_tag(cls, tag):
+        return (
+            Note.query.join(note_tag_associations)
+            .filter("note_tag_associations.tag == '{}'".format(tag)).all()
+        )
+
+    @classmethod
+    def index_by_tags(cls):
+        index = {}
+        for tag in Tag.index():
+            index[tag] = cls.index_by_tag(tag)
+        return index
 
     @classmethod
     def create(cls, note, id=None, state='PENDING', tags=[]):

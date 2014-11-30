@@ -40,7 +40,18 @@ def tags():
 
 @app.route('/tags/<tag>/notes', methods=['GET'])
 def notes_under_tag(tag):
-    pass
+    notes = [n.to_dict() for n in models.Note.index_by_tag(tag)]
+    return render(notes)
+
+
+@app.route('/notes_by_tags', methods=['GET'])
+def notes_by_tags():
+    notes_by_tag = models.Note.index_by_tags()
+    serialized = {
+        tag: map(lambda note: note.to_dict(), notes_by_tag[tag])
+        for tag in notes_by_tag
+    }
+    return render(serialized)
 
 
 if __name__ == '__main__':
