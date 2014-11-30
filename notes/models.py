@@ -3,7 +3,9 @@ from datetime import datetime
 import json
 import uuid
 
-from sqlalchemy import Column, Unicode, DateTime, create_engine, ForeignKey, Table
+from sqlalchemy import (
+    Column, DateTime, ForeignKey, Table, Unicode, create_engine
+)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship
 
@@ -13,7 +15,6 @@ engine = create_engine(settings.DB_URI)
 Session = scoped_session(sessionmaker(bind=engine))
 Base = declarative_base()
 Base.query = Session.query_property()
-
 
 
 def db_init():
