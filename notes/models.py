@@ -18,6 +18,7 @@ Base.query = Session.query_property()
 
 
 def db_init():
+    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
 
 

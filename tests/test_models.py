@@ -1,9 +1,10 @@
 from __future__ import unicode_literals
 
-from notes.models import Note, Tag
+from notes.models import Note, Tag, db_init
 
 
 def test_create_note():
+    db_init()
     tags = ['todo', 'reminder']
     note = Note.create('note to self', tags=tags)
     tags_in_db = Tag.index()

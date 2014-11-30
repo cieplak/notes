@@ -15,7 +15,12 @@ def render(obj):
 
 @app.route('/')
 def root():
-    return '{"notes": "/notes", "tags": "/tags"}'
+    return '''{
+"notes": "/notes",
+"tags": "/tags",
+"notes_by_tags": "/notes_by_tags",
+"notes_under_tag": "/notes_under_tag"
+}'''
 
 
 @app.route('/notes', methods=['GET', 'POST'])
@@ -30,6 +35,7 @@ def notes():
         note = payload.get('note')
         tags = tags.split()
         note = models.Note.create(note=note, tags=tags, id=id)
+        models.Session.commit()
         return str(note.id), 201
 
 
@@ -40,8 +46,9 @@ def tags():
 
 @app.route('/tags/<tag>/notes', methods=['GET'])
 def notes_under_tag(tag):
-    notes = [n.to_dict() for n in models.Note.index_by_tag(tag)]
-    return render(notes)
+    serialized = [n.to_dict() for n in models.Note.index_by_tag(tag)]
+    result = render(serialized)
+    return result
 
 
 @app.route('/notes_by_tags', methods=['GET'])
