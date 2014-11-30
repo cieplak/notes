@@ -80,7 +80,6 @@ def test_note_under_tag():
     client.post('/notes', data=json.dumps(note))
     resp = client.get('/tags/car/notes')
     view = json.loads(resp.data)
-    import ipdb; ipdb.set_trace()
     expected_view = [
         {'note': 'buy oil; change oil', 'tags': ['car', 'grocery']},
     ]
