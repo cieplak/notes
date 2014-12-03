@@ -22,8 +22,9 @@ def root():
 "notes_under_tag": "/notes_under_tag"
 }'''
 
+
 @app.route('/index.html')
-def root():
+def index():
     return app.send_static_file('index.html')
 
 
